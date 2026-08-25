@@ -155,7 +155,7 @@ export default function FormulaireRessource({
   const slugPublic = enregistrement?.slug ? String(enregistrement.slug) : "";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10">
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
       <nav className="text-sm text-nuit-600">
         <Link href={`/admin/${ressource.cle}`} className="hover:text-or-600">
           ← {ressource.libelle}

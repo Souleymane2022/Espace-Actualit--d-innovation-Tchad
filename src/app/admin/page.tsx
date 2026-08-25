@@ -42,7 +42,7 @@ export default async function TableauDeBord() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
       <h1 className="text-2xl font-bold tracking-tight text-nuit-900">
         Bonjour {session.nom.split(" ")[0]} 👋
       </h1>
@@ -86,7 +86,7 @@ export default async function TableauDeBord() {
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
-        <section>
+        <section className="min-w-0">
           <h2 className="mb-4 text-lg font-bold text-nuit-900">Derniers articles modifiés</h2>
           <ul className="space-y-2">
             {derniersArticles.map((a) => (
@@ -95,7 +95,7 @@ export default async function TableauDeBord() {
                   href={`/admin/articles/${a.id}`}
                   className="flex items-center justify-between gap-3 rounded-lg border border-sable-200 bg-white px-4 py-3 text-sm hover:border-nuit-400"
                 >
-                  <span className="truncate font-medium text-nuit-800">{a.titre}</span>
+                  <span className="min-w-0 truncate font-medium text-nuit-800">{a.titre}</span>
                   <span className="shrink-0 text-xs text-nuit-600">
                     {a.publie ? "Publié" : "Brouillon"}
                   </span>
@@ -110,7 +110,7 @@ export default async function TableauDeBord() {
           </ul>
         </section>
 
-        <section>
+        <section className="min-w-0">
           <h2 className="mb-4 text-lg font-bold text-nuit-900">Dernières propositions reçues</h2>
           <ul className="space-y-2">
             {dernieresSoumissions.map((s) => (
