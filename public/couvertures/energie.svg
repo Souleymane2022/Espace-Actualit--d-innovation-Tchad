@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="Énergie">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#23408f"/>
+      <stop offset="100%" stop-color="#f0a90c"/>
+    </linearGradient>
+    <pattern id="p" width="60" height="60" patternUnits="userSpaceOnUse">
+      <circle cx="30" cy="30" r="1.6" fill="#ffffff" opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect width="1200" height="675" fill="url(#p)"/>
+  <circle cx="1010" cy="150" r="230" fill="#ffffff" opacity="0.06"/>
+  <circle cx="180" cy="600" r="170" fill="#ffffff" opacity="0.05"/>
+  <text x="80" y="330" font-family="Georgia, serif" font-size="120" fill="#ffffff" opacity="0.92">☀</text>
+  <text x="80" y="430" font-family="Helvetica, Arial, sans-serif" font-size="54" font-weight="bold" fill="#ffffff">Énergie</text>
+  <text x="80" y="482" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#ffffff" opacity="0.75">Innov'Tchad</text>
+  <rect x="80" y="520" width="120" height="6" rx="3" fill="#fbbf24"/>
+</svg>

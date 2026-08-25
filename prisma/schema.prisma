@@ -1,0 +1,185 @@
+// Schéma de données de « Innov'Tchad »
+// Espace d'actualité de l'innovation et de la recherche scientifique au Tchad.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // SQLite pour le développement. Pour la production, remplacer par
+  // provider = "postgresql" et adapter DATABASE_URL (voir README.md).
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Compte de l'espace d'administration.
+model Utilisateur {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  nom            String
+  motDePasseHash String
+  role           String   @default("editeur") // "admin" | "editeur"
+  creeLe         DateTime @default(now())
+}
+
+/// Rubrique d'un article (Agriculture, Santé, Numérique...).
+model Categorie {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  nom         String
+  description String?
+  couleur     String    @default("#0d9488")
+  articles    Article[]
+}
+
+/// Article du fil d'actualité.
+model Article {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  titre       String
+  chapo       String
+  contenu     String
+  image       String?
+  auteur      String     @default("La rédaction")
+  source      String?
+  lienSource  String?
+  tags        String     @default("")
+  aLaUne      Boolean    @default(false)
+  publie      Boolean    @default(true)
+  vues        Int        @default(0)
+  publieLe    DateTime   @default(now())
+  misAJourLe  DateTime   @updatedAt
+  categorieId String?
+  categorie   Categorie? @relation(fields: [categorieId], references: [id], onDelete: SetNull)
+
+  @@index([publieLe])
+}
+
+/// Profil d'un chercheur ou d'une chercheuse.
+model Chercheur {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  civilite      String        @default("Dr")
+  prenom        String
+  nom           String
+  institution   String
+  laboratoire   String?
+  ville         String        @default("N'Djaména")
+  domaine       String
+  motsCles      String        @default("")
+  biographie    String
+  photo         String?
+  email         String?
+  telephone     String?
+  siteWeb       String?
+  orcid         String?
+  googleScholar String?
+  linkedin      String?
+  aLaUne        Boolean       @default(false)
+  publie        Boolean       @default(true)
+  creeLe        DateTime      @default(now())
+  misAJourLe    DateTime      @updatedAt
+  publications  Publication[]
+  innovations   Innovation[]
+}
+
+/// Publication scientifique rattachée à un chercheur.
+model Publication {
+  id          String    @id @default(cuid())
+  titre       String
+  revue       String?
+  annee       Int
+  doi         String?
+  lien        String?
+  coAuteurs   String?
+  chercheurId String
+  chercheur   Chercheur @relation(fields: [chercheurId], references: [id], onDelete: Cascade)
+
+  @@index([annee])
+}
+
+/// Innovation, invention ou projet technologique.
+model Innovation {
+  id           String     @id @default(cuid())
+  slug         String     @unique
+  nom          String
+  resume       String
+  description  String
+  secteur      String
+  statut       String     @default("prototype") // idee | prototype | pilote | commercialise
+  ville        String     @default("N'Djaména")
+  annee        Int
+  porteur      String
+  organisation String?
+  image        String?
+  contact      String?
+  siteWeb      String?
+  video        String?
+  aLaUne       Boolean    @default(false)
+  publie       Boolean    @default(true)
+  creeLe       DateTime   @default(now())
+  misAJourLe   DateTime   @updatedAt
+  chercheurId  String?
+  chercheur    Chercheur? @relation(fields: [chercheurId], references: [id], onDelete: SetNull)
+}
+
+/// Événement : conférence, hackathon, atelier, salon.
+model Evenement {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  titre           String
+  description     String
+  type            String    @default("conference") // conference | hackathon | atelier | salon | formation
+  lieu            String
+  ville           String    @default("N'Djaména")
+  dateDebut       DateTime
+  dateFin         DateTime?
+  organisateur    String
+  lienInscription String?
+  image           String?
+  publie          Boolean   @default(true)
+  creeLe          DateTime  @default(now())
+  misAJourLe      DateTime  @updatedAt
+
+  @@index([dateDebut])
+}
+
+/// Appel à projets, bourse, financement ou prix scientifique.
+model Opportunite {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  titre       String
+  description String
+  type        String    @default("appel") // appel | bourse | financement | prix | formation
+  organisme   String
+  dateLimite  DateTime?
+  montant     String?
+  lien        String?
+  publie      Boolean   @default(true)
+  creeLe      DateTime  @default(now())
+  misAJourLe  DateTime  @updatedAt
+
+  @@index([dateLimite])
+}
+
+/// Contribution proposée par le public depuis le formulaire « Contribuer ».
+model Soumission {
+  id         String   @id @default(cuid())
+  type       String   @default("innovation") // innovation | chercheur | actualite | evenement
+  nomContact String
+  email      String
+  telephone  String?
+  titre      String
+  message    String
+  statut     String   @default("nouveau") // nouveau | en_cours | publie | rejete
+  creeLe     DateTime @default(now())
+
+  @@index([creeLe])
+}
+
+/// Inscription à la lettre d'information.
+model Abonne {
+  id     String   @id @default(cuid())
+  email  String   @unique
+  creeLe DateTime @default(now())
+}

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/* Palette inspirée du drapeau tchadien : bleu indigo, or et rouge terre. */
+@theme {
+  --color-nuit-50: #eef2ff;
+  --color-nuit-100: #e0e7ff;
+  --color-nuit-200: #c7d2fe;
+  --color-nuit-400: #6d84d8;
+  --color-nuit-600: #23408f;
+  --color-nuit-700: #1a3070;
+  --color-nuit-800: #132555;
+  --color-nuit-900: #0b1738;
+  --color-or-50: #fffaeb;
+  --color-or-100: #fef1c7;
+  --color-or-300: #fcd34d;
+  --color-or-400: #fbbf24;
+  --color-or-500: #f0a90c;
+  --color-or-600: #cc8a05;
+  --color-terre-100: #fee2e2;
+  --color-terre-500: #d4382f;
+  --color-terre-600: #b32a22;
+  --color-sable-50: #faf8f4;
+  --color-sable-100: #f3efe7;
+  --color-sable-200: #e7e0d3;
+
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-sable-50);
+  color: var(--color-nuit-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Rendu du contenu long des articles (texte simple avec paragraphes). */
+.prose-article p {
+  margin-bottom: 1.15rem;
+  line-height: 1.85;
+}
+
+.prose-article h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 2rem 0 0.85rem;
+  color: var(--color-nuit-800);
+}
+
+.prose-article h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.6rem;
+  color: var(--color-nuit-800);
+}
+
+.prose-article ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-bottom: 1.15rem;
+}
+
+.prose-article li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+}
+
+.prose-article blockquote {
+  border-left: 4px solid var(--color-or-400);
+  padding: 0.35rem 0 0.35rem 1rem;
+  font-style: italic;
+  color: var(--color-nuit-700);
+  margin-bottom: 1.15rem;
+}
+
+.lien-souligne {
+  background-image: linear-gradient(var(--color-or-400), var(--color-or-400));
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  transition: background-size 0.25s ease;
+}
+
+.lien-souligne:hover {
+  background-size: 100% 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
