@@ -18,7 +18,11 @@ export type EtatAdmin = { ok: boolean; message: string };
 function messageErreurConnexion(erreur: unknown): string {
   const texte = erreur instanceof Error ? erreur.message : "";
   if (texte.includes("SESSION_SECRET")) {
-    return "Configuration incomplète : la variable SESSION_SECRET est absente ou fait moins de 8 caractères. Corrigez-la chez l'hébergeur puis redéployez.";
+    const secret = process.env.SESSION_SECRET;
+    const detail = !secret
+      ? "absente de cet environnement"
+      : `présente mais trop courte (${secret.length} caractères, minimum 8)`;
+    return `Configuration incomplète : la variable SESSION_SECRET est ${detail}. Corrigez-la chez l'hébergeur puis redéployez.`;
   }
   if (/P10\d\d|database|reach|connect/i.test(texte)) {
     return "La base de données est injoignable. Vérifiez la variable DATABASE_URL chez l'hébergeur puis redéployez.";
