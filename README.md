@@ -134,17 +134,16 @@ Tailwind CSS 4, Prisma et PostgreSQL.
 2. **Ajouter les autres variables** (Settings → Environment Variables) :
    - `SESSION_SECRET` : une valeur aléatoire (`openssl rand -hex 32`) — obligatoire ;
    - `NEXT_PUBLIC_SITE_URL` : l'URL publique, par ex. `https://innovtchad.vercel.app`.
-3. **Redéployer** (Deployments → ⋯ → Redeploy). Le script `vercel-build` applique
-   automatiquement le schéma à la base (`prisma db push`) avant de construire le site.
-4. **Peupler la base une seule fois**, depuis votre machine, avec l'URL de la base Vercel
-   (copiez la valeur de `DATABASE_URL` depuis l'onglet Storage) :
+3. **Déployer** : chaque push (ou Deployments → ⋯ → Redeploy) exécute `vercel-build`,
+   qui applique le schéma à la base puis, **uniquement si la base est vide**, la remplit
+   avec le jeu de démonstration et crée le compte administrateur à partir de
+   `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Une base déjà peuplée n'est jamais touchée.
 
-   ```bash
-   DATABASE_URL="postgresql://…neon.tech/…" ADMIN_PASSWORD="un-vrai-mot-de-passe" npm run db:seed
-   ```
+Pour repartir de zéro volontairement (efface tout !) :
 
-   ⚠️ Le script de peuplement **vide la base** avant d'insérer le jeu de démonstration :
-   ne le relancez jamais sur une base contenant de vrais contenus.
+```bash
+DATABASE_URL="…" DATABASE_URL_UNPOOLED="…" FORCE_SEED=1 npm run db:seed
+```
 
 ### Autres hébergeurs
 
@@ -155,10 +154,11 @@ PostgreSQL, définissez les variables ci-dessous, puis `npm run build && npm run
 
 | Variable | Rôle |
 | --- | --- |
-| `DATABASE_URL` | Connexion PostgreSQL |
+| `DATABASE_URL` | Connexion PostgreSQL (poolée) |
+| `DATABASE_URL_UNPOOLED` | Connexion directe, utilisée par `prisma db push` (fournie par Neon ; en local, même valeur que `DATABASE_URL`) |
 | `SESSION_SECRET` | Signature des cookies de session — **obligatoire en production** |
 | `NEXT_PUBLIC_SITE_URL` | URL publique, utilisée par le sitemap et les métadonnées |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Compte créé par le script de peuplement |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Identifiants du compte administrateur créé au premier peuplement |
 
 ---
 

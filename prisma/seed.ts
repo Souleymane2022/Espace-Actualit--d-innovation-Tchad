@@ -502,6 +502,15 @@ const OPPORTUNITES = [
 ];
 
 async function main() {
+  // Garde-fou : ce script est lancé à chaque déploiement (vercel-build).
+  // Si la base contient déjà un compte, elle est considérée comme vivante
+  // et on ne touche à rien — sauf si FORCE_SEED=1 est passé explicitement.
+  const dejaPeuplee = (await prisma.utilisateur.count()) > 0;
+  if (dejaPeuplee && process.env.FORCE_SEED !== "1") {
+    console.log("Base déjà peuplée : aucun changement (utilisez FORCE_SEED=1 pour repartir de zéro).");
+    return;
+  }
+
   console.log("Nettoyage de la base…");
   await prisma.publication.deleteMany();
   await prisma.innovation.deleteMany();

@@ -9,8 +9,12 @@ datasource db {
   // PostgreSQL partout : indispensable sur les hébergeurs sans disque
   // persistant (Vercel, Netlify...), et sans surprise entre le développement
   // et la production. Voir README.md pour créer une base locale ou hébergée.
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Connexion directe (sans pooler) utilisée par les commandes de schéma
+  // (db push, migrate). Neon la fournit sous ce nom ; en local, mettre la
+  // même valeur que DATABASE_URL.
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 /// Compte de l'espace d'administration.
