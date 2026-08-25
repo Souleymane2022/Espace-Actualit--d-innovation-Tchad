@@ -45,14 +45,22 @@ bascule publié / brouillon en un clic, prévisualisation du rendu public et sup
 
 ## Démarrage
 
-Prérequis : Node.js 20 ou plus.
+Prérequis : Node.js 20 ou plus, et une base PostgreSQL (locale ou hébergée).
 
 ```bash
 npm install
-cp .env.example .env      # puis ajustez les valeurs
-npm run db:push           # crée la base SQLite
+cp .env.example .env      # puis renseignez DATABASE_URL et les autres valeurs
+npm run db:push           # applique le schéma à la base
 npm run db:seed           # jeu de démonstration + compte administrateur
 npm run dev               # http://localhost:3000
+```
+
+Pour créer rapidement une base locale sur un poste où PostgreSQL est installé :
+
+```bash
+sudo -u postgres psql -c "CREATE ROLE innov LOGIN PASSWORD 'innov';"
+sudo -u postgres createdb -O innov innovtchad
+# DATABASE_URL="postgresql://innov:innov@127.0.0.1:5432/innovtchad"
 ```
 
 Identifiants de l'espace de rédaction créés par le peuplement (modifiables dans `.env`) :
@@ -115,30 +123,39 @@ src/
 ```
 
 **Pile technique :** Next.js 15 (App Router, React 19, Server Actions), TypeScript,
-Tailwind CSS 4, Prisma et SQLite.
+Tailwind CSS 4, Prisma et PostgreSQL.
 
 ## Mise en production
 
-### Base de données
+### Déploiement sur Vercel
 
-SQLite convient à un hébergement sur serveur unique avec disque persistant (VPS, Render,
-Railway, Fly.io). Pour un hébergement sans état comme Vercel, basculez sur PostgreSQL :
+1. **Créer la base** : dans le projet Vercel, onglet **Storage → Create Database → Neon
+   (Postgres)**. La variable `DATABASE_URL` est ajoutée automatiquement au projet.
+2. **Ajouter les autres variables** (Settings → Environment Variables) :
+   - `SESSION_SECRET` : une valeur aléatoire (`openssl rand -hex 32`) — obligatoire ;
+   - `NEXT_PUBLIC_SITE_URL` : l'URL publique, par ex. `https://innovtchad.vercel.app`.
+3. **Redéployer** (Deployments → ⋯ → Redeploy). Le script `vercel-build` applique
+   automatiquement le schéma à la base (`prisma db push`) avant de construire le site.
+4. **Peupler la base une seule fois**, depuis votre machine, avec l'URL de la base Vercel
+   (copiez la valeur de `DATABASE_URL` depuis l'onglet Storage) :
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
+   ```bash
+   DATABASE_URL="postgresql://…neon.tech/…" ADMIN_PASSWORD="un-vrai-mot-de-passe" npm run db:seed
+   ```
 
-puis `npx prisma migrate dev --name init` et redéployez. Aucun autre changement de code
-n'est nécessaire.
+   ⚠️ Le script de peuplement **vide la base** avant d'insérer le jeu de démonstration :
+   ne le relancez jamais sur une base contenant de vrais contenus.
+
+### Autres hébergeurs
+
+Tout hébergeur Node.js convient (VPS, Render, Railway, Fly.io) : fournissez une base
+PostgreSQL, définissez les variables ci-dessous, puis `npm run build && npm run start`.
 
 ### Variables d'environnement
 
 | Variable | Rôle |
 | --- | --- |
-| `DATABASE_URL` | Connexion à la base |
+| `DATABASE_URL` | Connexion PostgreSQL |
 | `SESSION_SECRET` | Signature des cookies de session — **obligatoire en production** |
 | `NEXT_PUBLIC_SITE_URL` | URL publique, utilisée par le sitemap et les métadonnées |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Compte créé par le script de peuplement |

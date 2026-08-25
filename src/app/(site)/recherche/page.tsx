@@ -25,10 +25,10 @@ export default async function PageRecherche({
           where: {
             publie: true,
             OR: [
-              { titre: { contains: terme } },
-              { chapo: { contains: terme } },
-              { contenu: { contains: terme } },
-              { tags: { contains: terme } },
+              { titre: { contains: terme, mode: "insensitive" as const } },
+              { chapo: { contains: terme, mode: "insensitive" as const } },
+              { contenu: { contains: terme, mode: "insensitive" as const } },
+              { tags: { contains: terme, mode: "insensitive" as const } },
             ],
           },
           include: { categorie: true },
@@ -39,12 +39,12 @@ export default async function PageRecherche({
           where: {
             publie: true,
             OR: [
-              { nom: { contains: terme } },
-              { prenom: { contains: terme } },
-              { domaine: { contains: terme } },
-              { institution: { contains: terme } },
-              { motsCles: { contains: terme } },
-              { biographie: { contains: terme } },
+              { nom: { contains: terme, mode: "insensitive" as const } },
+              { prenom: { contains: terme, mode: "insensitive" as const } },
+              { domaine: { contains: terme, mode: "insensitive" as const } },
+              { institution: { contains: terme, mode: "insensitive" as const } },
+              { motsCles: { contains: terme, mode: "insensitive" as const } },
+              { biographie: { contains: terme, mode: "insensitive" as const } },
             ],
           },
           include: { _count: { select: { publications: true } } },
@@ -54,11 +54,11 @@ export default async function PageRecherche({
           where: {
             publie: true,
             OR: [
-              { nom: { contains: terme } },
-              { resume: { contains: terme } },
-              { description: { contains: terme } },
-              { secteur: { contains: terme } },
-              { porteur: { contains: terme } },
+              { nom: { contains: terme, mode: "insensitive" as const } },
+              { resume: { contains: terme, mode: "insensitive" as const } },
+              { description: { contains: terme, mode: "insensitive" as const } },
+              { secteur: { contains: terme, mode: "insensitive" as const } },
+              { porteur: { contains: terme, mode: "insensitive" as const } },
             ],
           },
           orderBy: { annee: "desc" },
@@ -67,7 +67,7 @@ export default async function PageRecherche({
         prisma.evenement.findMany({
           where: {
             publie: true,
-            OR: [{ titre: { contains: terme } }, { description: { contains: terme } }],
+            OR: [{ titre: { contains: terme, mode: "insensitive" as const } }, { description: { contains: terme, mode: "insensitive" as const } }],
           },
           orderBy: { dateDebut: "desc" },
           take: 5,

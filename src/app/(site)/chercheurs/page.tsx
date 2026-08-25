@@ -27,11 +27,11 @@ export default async function PageChercheurs({
     ...(q
       ? {
           OR: [
-            { nom: { contains: q } },
-            { prenom: { contains: q } },
-            { institution: { contains: q } },
-            { motsCles: { contains: q } },
-            { domaine: { contains: q } },
+            { nom: { contains: q, mode: "insensitive" as const } },
+            { prenom: { contains: q, mode: "insensitive" as const } },
+            { institution: { contains: q, mode: "insensitive" as const } },
+            { motsCles: { contains: q, mode: "insensitive" as const } },
+            { domaine: { contains: q, mode: "insensitive" as const } },
           ],
         }
       : {}),

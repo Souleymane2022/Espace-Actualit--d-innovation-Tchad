@@ -6,9 +6,10 @@ generator client {
 }
 
 datasource db {
-  // SQLite pour le développement. Pour la production, remplacer par
-  // provider = "postgresql" et adapter DATABASE_URL (voir README.md).
-  provider = "sqlite"
+  // PostgreSQL partout : indispensable sur les hébergeurs sans disque
+  // persistant (Vercel, Netlify...), et sans surprise entre le développement
+  // et la production. Voir README.md pour créer une base locale ou hébergée.
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
