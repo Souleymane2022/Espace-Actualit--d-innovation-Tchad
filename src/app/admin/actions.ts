@@ -14,6 +14,18 @@ export type EtatAdmin = { ok: boolean; message: string };
 /* Authentification                                                    */
 /* ------------------------------------------------------------------ */
 
+/** Traduit une exception technique en message actionnable sur le formulaire. */
+function messageErreurConnexion(erreur: unknown): string {
+  const texte = erreur instanceof Error ? erreur.message : "";
+  if (texte.includes("SESSION_SECRET")) {
+    return "Configuration incomplète : la variable SESSION_SECRET est absente ou fait moins de 8 caractères. Corrigez-la chez l'hébergeur puis redéployez.";
+  }
+  if (/P10\d\d|database|reach|connect/i.test(texte)) {
+    return "La base de données est injoignable. Vérifiez la variable DATABASE_URL chez l'hébergeur puis redéployez.";
+  }
+  return "Erreur serveur inattendue pendant la connexion. Consultez les journaux de l'hébergeur.";
+}
+
 export async function connexion(_etat: EtatAdmin, donnees: FormData): Promise<EtatAdmin> {
   const email = String(donnees.get("email") ?? "");
   const motDePasse = String(donnees.get("motDePasse") ?? "");
@@ -22,12 +34,18 @@ export async function connexion(_etat: EtatAdmin, donnees: FormData): Promise<Et
     return { ok: false, message: "Renseignez votre e-mail et votre mot de passe." };
   }
 
-  const utilisateur = await verifierIdentifiants(email, motDePasse);
-  if (!utilisateur) {
-    return { ok: false, message: "Identifiants incorrects." };
+  // Toute défaillance technique (secret manquant, base injoignable...) est
+  // rendue lisible sur le formulaire plutôt qu'en page d'erreur brute.
+  try {
+    const utilisateur = await verifierIdentifiants(email, motDePasse);
+    if (!utilisateur) {
+      return { ok: false, message: "Identifiants incorrects." };
+    }
+    await ouvrirSession(utilisateur);
+  } catch (erreur) {
+    return { ok: false, message: messageErreurConnexion(erreur) };
   }
 
-  await ouvrirSession(utilisateur);
   redirect("/admin");
 }
 
