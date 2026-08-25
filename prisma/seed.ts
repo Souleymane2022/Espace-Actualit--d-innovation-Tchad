@@ -502,12 +502,32 @@ const OPPORTUNITES = [
 ];
 
 async function main() {
-  // Garde-fou : ce script est lancé à chaque déploiement (vercel-build).
-  // Si la base contient déjà un compte, elle est considérée comme vivante
-  // et on ne touche à rien — sauf si FORCE_SEED=1 est passé explicitement.
-  const dejaPeuplee = (await prisma.utilisateur.count()) > 0;
-  if (dejaPeuplee && process.env.FORCE_SEED !== "1") {
-    console.log("Base déjà peuplée : aucun changement (utilisez FORCE_SEED=1 pour repartir de zéro).");
+  // 1. Compte administrateur — synchronisé à chaque déploiement avec
+  //    ADMIN_EMAIL / ADMIN_PASSWORD. Mot de passe oublié ? Modifier la
+  //    variable dans l'hébergeur puis redéployer suffit à le réinitialiser.
+  const email = (process.env.ADMIN_EMAIL ?? "admin@innovtchad.td").toLowerCase();
+  const motDePasse = process.env.ADMIN_PASSWORD ?? "admin1234";
+  await prisma.utilisateur.upsert({
+    where: { email },
+    update: { motDePasseHash: await hash(motDePasse, 10) },
+    create: {
+      email,
+      nom: "Rédaction Innov'Tchad",
+      motDePasseHash: await hash(motDePasse, 10),
+      role: "admin",
+    },
+  });
+  console.log(`Compte administrateur synchronisé : ${email}`);
+
+  // 2. Contenu de démonstration — inséré uniquement dans une base vierge.
+  //    Ce script tourne à chaque déploiement (vercel-build) : dès qu'un
+  //    contenu existe, on ne touche à rien, sauf FORCE_SEED=1 explicite.
+  const contenuExistant =
+    (await prisma.article.count()) +
+    (await prisma.chercheur.count()) +
+    (await prisma.innovation.count());
+  if (contenuExistant > 0 && process.env.FORCE_SEED !== "1") {
+    console.log("Contenu déjà en place : jeu de démonstration non réinséré (FORCE_SEED=1 pour repartir de zéro).");
     return;
   }
 
@@ -521,20 +541,6 @@ async function main() {
   await prisma.opportunite.deleteMany();
   await prisma.soumission.deleteMany();
   await prisma.abonne.deleteMany();
-
-  console.log("Compte administrateur…");
-  const email = (process.env.ADMIN_EMAIL ?? "admin@innovtchad.td").toLowerCase();
-  const motDePasse = process.env.ADMIN_PASSWORD ?? "admin1234";
-  await prisma.utilisateur.upsert({
-    where: { email },
-    update: { motDePasseHash: await hash(motDePasse, 10) },
-    create: {
-      email,
-      nom: "Rédaction Innov'Tchad",
-      motDePasseHash: await hash(motDePasse, 10),
-      role: "admin",
-    },
-  });
 
   console.log("Rubriques…");
   const categories = new Map<string, string>();
