@@ -145,6 +145,15 @@ Pour repartir de zéro volontairement (efface tout !) :
 DATABASE_URL="…" DATABASE_URL_UNPOOLED="…" FORCE_SEED=1 npm run db:seed
 ```
 
+### Base partagée avec d'autres applications
+
+Toutes les tables d'Innov'Tchad sont créées dans un **schéma PostgreSQL dédié**
+(`innovtchad`), jamais dans `public`. La base peut donc être partagée avec une autre
+application sans collision : `prisma db push` ne voit que ce schéma et ne touche à
+rien d'autre. Le paramètre `?schema=innovtchad` est ajouté automatiquement aux
+adresses de connexion par `scripts/executer-avec-schema.mjs` (commandes) et
+`src/lib/db.ts` (application) — il n'y a rien à configurer.
+
 ### Autres hébergeurs
 
 Tout hébergeur Node.js convient (VPS, Render, Railway, Fly.io) : fournissez une base
