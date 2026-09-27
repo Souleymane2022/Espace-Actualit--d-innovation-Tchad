@@ -19,7 +19,7 @@ export function Etiquette({
   };
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${tons[ton]}`}
+      className={`inline-flex items-center border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${tons[ton]}`}
       style={couleur ? { backgroundColor: `${couleur}14`, color: couleur, borderColor: `${couleur}33` } : undefined}
     >
       {children}
@@ -39,19 +39,21 @@ export function TitreSection({
   libelleLien?: string;
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-sable-200 pb-3">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-nuit-900">{titre}</h2>
-        {sousTitre && <p className="mt-1 text-sm text-nuit-600">{sousTitre}</p>}
+    <div className="mb-7 border-t-[3px] border-nuit-900 pt-3">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="titre-journal text-2xl text-nuit-900">{titre}</h2>
+          {sousTitre && <p className="mt-1 text-sm text-nuit-600">{sousTitre}</p>}
+        </div>
+        {lien && (
+          <Link
+            href={lien}
+            className="text-[13px] font-semibold uppercase tracking-wide text-nuit-700 hover:text-or-600"
+          >
+            {libelleLien} →
+          </Link>
+        )}
       </div>
-      {lien && (
-        <Link
-          href={lien}
-          className="text-sm font-semibold text-nuit-700 hover:text-or-600"
-        >
-          {libelleLien} →
-        </Link>
-      )}
     </div>
   );
 }
@@ -70,10 +72,8 @@ export function EnTetePage({
   return (
     <section className="border-b border-sable-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-12">
-        {surtitre && (
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-or-600">{surtitre}</p>
-        )}
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-nuit-900 sm:text-4xl">{titre}</h1>
+        {surtitre && <p className="rubrique text-or-600">{surtitre}</p>}
+        <h1 className="titre-journal mt-2 text-3xl text-nuit-900 sm:text-4xl">{titre}</h1>
         {description && (
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-nuit-600">{description}</p>
         )}
@@ -85,7 +85,7 @@ export function EnTetePage({
 
 export function EtatVide({ message }: { message: string }) {
   return (
-    <div className="rounded-xl border border-dashed border-sable-200 bg-white px-6 py-14 text-center">
+    <div className="border border-dashed border-sable-200 bg-sable-50 px-6 py-14 text-center">
       <p className="text-sm text-nuit-600">{message}</p>
     </div>
   );
@@ -106,7 +106,7 @@ export function Filtres({
     <div className="flex flex-wrap gap-2">
       <Link
         href={base}
-        className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+        className={`border px-3.5 py-1.5 text-sm font-medium transition-colors ${
           !actif
             ? "border-nuit-800 bg-nuit-800 text-white"
             : "border-sable-200 bg-white text-nuit-700 hover:border-nuit-400"
@@ -118,7 +118,7 @@ export function Filtres({
         <Link
           key={o.valeur}
           href={`${base}?${parametre}=${encodeURIComponent(o.valeur)}`}
-          className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+          className={`border px-3.5 py-1.5 text-sm font-medium transition-colors ${
             actif === o.valeur
               ? "border-nuit-800 bg-nuit-800 text-white"
               : "border-sable-200 bg-white text-nuit-700 hover:border-nuit-400"

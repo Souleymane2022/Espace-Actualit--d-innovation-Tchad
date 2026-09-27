@@ -75,63 +75,44 @@ export default async function Accueil() {
 
   return (
     <>
-      <section className="border-b border-sable-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-or-600">
-            Plateforme nationale de valorisation
-          </p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-nuit-900 sm:text-5xl">
-            L&apos;innovation et la recherche tchadiennes,{" "}
-            <span className="text-or-600">enfin visibles</span>.
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-nuit-600">
-            Innov&apos;Tchad rassemble en un seul endroit l&apos;actualité scientifique du pays, les
-            profils des chercheuses et chercheurs, les innovations nées sur le terrain, ainsi que
-            les événements et financements à ne pas manquer.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link
-              href="/innovations"
-              className="rounded-md bg-nuit-800 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-nuit-700"
-            >
-              Découvrir les innovations
-            </Link>
-            <Link
-              href="/chercheurs"
-              className="rounded-md border border-nuit-800 px-5 py-2.5 text-sm font-semibold text-nuit-800 transition-colors hover:bg-nuit-800 hover:text-white"
-            >
-              Parcourir l&apos;annuaire des chercheurs
-            </Link>
-          </div>
-
-          <dl className="mt-12 grid grid-cols-2 gap-6 border-t border-sable-200 pt-8 sm:grid-cols-4">
-            {[
-              { valeur: d.chiffres.nbInnovations, libelle: "Innovations recensées" },
-              { valeur: d.chiffres.nbChercheurs, libelle: "Chercheurs référencés" },
-              { valeur: d.chiffres.nbPublications, libelle: "Publications indexées" },
-              { valeur: d.chiffres.nbArticles, libelle: "Articles publiés" },
-            ].map((c) => (
-              <div key={c.libelle}>
-                <dt className="text-3xl font-bold text-nuit-900">{c.valeur}</dt>
-                <dd className="mt-1 text-sm text-nuit-600">{c.libelle}</dd>
-              </div>
-            ))}
-          </dl>
+      {/* Bandeau des chiffres clés, façon bandeau de cotations */}
+      <div className="border-b border-sable-200 bg-sable-50">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-1 px-4 py-2 text-[13px]">
+          {[
+            { valeur: d.chiffres.nbInnovations, libelle: "innovations recensées" },
+            { valeur: d.chiffres.nbChercheurs, libelle: "chercheurs référencés" },
+            { valeur: d.chiffres.nbPublications, libelle: "publications indexées" },
+            { valeur: d.chiffres.nbArticles, libelle: "articles publiés" },
+          ].map((c) => (
+            <span key={c.libelle} className="text-nuit-600">
+              <strong className="font-bold text-nuit-900">{c.valeur}</strong> {c.libelle}
+            </span>
+          ))}
+          <Link
+            href="/contribuer"
+            className="ml-auto hidden font-semibold uppercase tracking-wide text-or-600 hover:text-or-500 sm:block"
+          >
+            Contribuer →
+          </Link>
         </div>
-      </section>
+      </div>
+
 
       <div className="mx-auto max-w-6xl px-4 py-14">
         <TitreSection
           titre="À la une"
           sousTitre="L'essentiel de l'actualité scientifique et technologique tchadienne"
           lien="/actualites"
+          libelleLien="Toutes les actualités"
         />
         {une ? (
-          <div className="space-y-6">
+          <div>
             <CarteArticle article={une} grande />
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-8 border-t border-sable-200 pt-8 sm:grid-cols-2 sm:gap-x-0 sm:divide-x sm:divide-sable-200 lg:grid-cols-3">
               {secondaires.slice(0, 6).map((a) => (
-                <CarteArticle key={a.id} article={a} />
+                <div key={a.id} className="min-w-0 sm:px-6 sm:first:pl-0 lg:[&:nth-child(3n+1)]:pl-0">
+                  <CarteArticle article={a} />
+                </div>
               ))}
             </div>
           </div>
@@ -140,8 +121,8 @@ export default async function Accueil() {
         )}
       </div>
 
-      <section className="border-y border-sable-200 bg-white py-14">
-        <div className="mx-auto max-w-6xl px-4">
+      <section className="py-14">
+        <div className="mx-auto max-w-6xl border-t border-sable-200 px-4 pt-2">
           <TitreSection
             titre="Innovations à découvrir"
             sousTitre="Des solutions imaginées et fabriquées au Tchad"
@@ -176,8 +157,8 @@ export default async function Accueil() {
         )}
       </div>
 
-      <section className="border-y border-sable-200 bg-white py-14">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 lg:grid-cols-2">
+      <section className="py-14">
+        <div className="mx-auto grid max-w-6xl gap-12 border-t border-sable-200 px-4 pt-2 lg:grid-cols-2">
           <div>
             <TitreSection titre="Prochains événements" lien="/evenements" />
             {d.evenements.length ? (
@@ -206,7 +187,7 @@ export default async function Accueil() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="rounded-2xl bg-nuit-900 px-6 py-12 text-center sm:px-14">
+        <div className="border-y-[3px] border-nuit-900 bg-nuit-900 px-6 py-12 text-center sm:px-14">
           <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Vous menez un projet, une recherche, une invention ?
           </h2>
@@ -217,7 +198,7 @@ export default async function Accueil() {
           </p>
           <Link
             href="/contribuer"
-            className="mt-7 inline-block rounded-md bg-or-500 px-6 py-3 text-sm font-semibold text-nuit-900 transition-colors hover:bg-or-400"
+            className="mt-7 inline-block bg-or-500 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-nuit-900 transition-colors hover:bg-or-400"
           >
             Proposer un contenu
           </Link>

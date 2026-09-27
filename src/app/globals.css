@@ -24,7 +24,7 @@
   --color-sable-200: #e7e0d3;
 
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-serif: "Source Serif 4 Variable", Georgia, Cambria, "Times New Roman", serif;
 }
 
 :root {
@@ -32,19 +32,51 @@
 }
 
 body {
-  background-color: var(--color-sable-50);
+  background-color: #ffffff;
   color: var(--color-nuit-900);
   -webkit-font-smoothing: antialiased;
 }
 
+/* Titres éditoriaux à la manière d'un quotidien. */
+.titre-journal {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Rubrique en petites capitales colorées. */
+.rubrique {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Lettrine du premier paragraphe d'un article. */
+.lettrine::first-letter {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 3.4em;
+  line-height: 0.85;
+  float: left;
+  padding-right: 0.12em;
+  padding-top: 0.05em;
+  color: var(--color-nuit-800);
+}
+
 /* Rendu du contenu long des articles (texte simple avec paragraphes). */
+.prose-article {
+  font-family: var(--font-serif);
+}
+
 .prose-article p {
-  margin-bottom: 1.15rem;
-  line-height: 1.85;
+  margin-bottom: 1.2rem;
+  line-height: 1.9;
 }
 
 .prose-article h2 {
-  font-size: 1.4rem;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
   font-weight: 700;
   margin: 2rem 0 0.85rem;
   color: var(--color-nuit-800);

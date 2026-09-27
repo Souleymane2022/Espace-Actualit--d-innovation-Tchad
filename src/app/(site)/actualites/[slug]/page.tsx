@@ -69,43 +69,58 @@ export default async function PageArticle({ params }: { params: Promise<{ slug: 
             </Link>
           </nav>
 
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            {article.categorie && (
-              <Etiquette couleur={article.categorie.couleur}>{article.categorie.nom}</Etiquette>
-            )}
-            <span className="text-sm text-nuit-600">{dateLongue(article.publieLe)}</span>
-            <span className="text-sm text-nuit-600">· {tempsLecture(article.contenu)}</span>
-          </div>
+          {article.categorie && (
+            <p className="rubrique mt-6" style={{ color: article.categorie.couleur }}>
+              {article.categorie.nom}
+            </p>
+          )}
 
-          <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-nuit-900 sm:text-4xl">
+          <h1 className="titre-journal mt-3 text-3xl leading-tight text-nuit-900 sm:text-[42px] sm:leading-[1.15]">
             {article.titre}
           </h1>
-          <p className="mt-4 text-lg leading-relaxed text-nuit-700">{article.chapo}</p>
-          <p className="mt-5 border-t border-sable-200 pt-5 text-sm font-medium text-nuit-600">
-            Par {article.auteur}
-            {article.source && <> · Source : {article.source}</>}
-          </p>
+          <p className="mt-5 font-serif text-xl leading-relaxed text-nuit-700">{article.chapo}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-y border-sable-200 py-3 text-[13px] text-nuit-600">
+            <span className="font-semibold uppercase tracking-wide text-nuit-800">
+              Par {article.auteur}
+            </span>
+            <span aria-hidden="true">|</span>
+            <span>{dateLongue(article.publieLe)}</span>
+            <span aria-hidden="true">|</span>
+            <span>{tempsLecture(article.contenu)}</span>
+            {article.source && (
+              <>
+                <span aria-hidden="true">|</span>
+                <span>Source : {article.source}</span>
+              </>
+            )}
+          </div>
         </div>
 
         {article.image && (
-          <div className="mx-auto max-w-4xl px-4">
-            <div className="overflow-hidden rounded-xl">
-              <Vignette src={article.image} alt={article.titre} ratio="aspect-[16/9]" />
-            </div>
-          </div>
+          <figure className="mx-auto max-w-4xl px-4">
+            <Vignette src={article.image} alt={article.titre} ratio="aspect-[16/9]" />
+            <figcaption className="mt-2 border-b border-sable-200 pb-2 text-xs italic text-nuit-600">
+              {article.titre} — Innov&apos;Tchad
+            </figcaption>
+          </figure>
         )}
 
         <div className="mx-auto max-w-3xl px-4 py-10">
           <div className="prose-article text-[17px] text-nuit-800">
-            {article.contenu.split("\n").map((ligne, i) => {
-              const t = ligne.trim();
-              if (!t) return null;
-              if (t.startsWith("## ")) return <h2 key={i}>{t.slice(3)}</h2>;
-              if (t.startsWith("### ")) return <h3 key={i}>{t.slice(4)}</h3>;
-              if (t.startsWith("> ")) return <blockquote key={i}>{t.slice(2)}</blockquote>;
-              if (t.startsWith("- ")) return <ul key={i}><li>{t.slice(2)}</li></ul>;
-              return <p key={i}>{t}</p>;
-            })}
+            {(() => {
+              let premierParagraphe = true;
+              return article.contenu.split("\n").map((ligne, i) => {
+                const t = ligne.trim();
+                if (!t) return null;
+                if (t.startsWith("## ")) return <h2 key={i}>{t.slice(3)}</h2>;
+                if (t.startsWith("### ")) return <h3 key={i}>{t.slice(4)}</h3>;
+                if (t.startsWith("> ")) return <blockquote key={i}>{t.slice(2)}</blockquote>;
+                if (t.startsWith("- ")) return <ul key={i}><li>{t.slice(2)}</li></ul>;
+                const classe = premierParagraphe ? "lettrine" : undefined;
+                premierParagraphe = false;
+                return <p key={i} className={classe}>{t}</p>;
+              });
+            })()}
           </div>
 
           {article.lienSource && (
@@ -136,7 +151,7 @@ export default async function PageArticle({ params }: { params: Promise<{ slug: 
 
       {similaires.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 py-14">
-          <h2 className="mb-6 border-b border-sable-200 pb-3 text-xl font-bold text-nuit-900">
+          <h2 className="titre-journal mb-7 border-t-[3px] border-nuit-900 pt-3 text-2xl text-nuit-900">
             À lire également
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

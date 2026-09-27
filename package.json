@@ -18,6 +18,7 @@
     "seed": "node scripts/executer-avec-schema.mjs npx tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@fontsource-variable/source-serif-4": "^5.3.0",
     "@prisma/client": "^6.1.0",
     "bcryptjs": "^2.4.3",
     "next": "^15.1.6",
